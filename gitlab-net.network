@@ -1,0 +1,13 @@
+[Unit]
+Description=Podman network for GitLab
+After=network-online.target
+Wants=network-online.target
+
+[Network]
+NetworkName=gitlab-net
+Driver=bridge
+Subnet=10.59.1.0/16
+Gateway=10.59.1.1
+
+[Install]
+WantedBy=multi-user.target # Ensure network is created on boot

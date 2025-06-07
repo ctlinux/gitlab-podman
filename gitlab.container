@@ -1,0 +1,28 @@
+[Unit]
+Description=GitLab CE Container
+After=network-online.target gitlab-net-network.service
+Wants=network-online.target gitlab-net-network.service
+
+[Container]
+Image=docker.io/gitlab/gitlab-ce:latest 
+ContainerName=gitlab
+PodmanArgs=--hostname=gitlab.ctlinux.srv
+Environment=GITLAB_OMNIBUS_CONFIG="external_url 'http://gitlab.ctlinux.srv'; gitlab_rails['lfs_enabled'] = true; gitlab_rails['gitlab_shell_ssh_port'] = 2222;"
+
+PublishPort=1080:80
+PublishPort=1443:443
+PublishPort=1222:22
+
+Volume=/srv/gitlab/config:/etc/gitlab:Z
+Volume=/srv/gitlab/logs:/var/log/gitlab:Z
+Volume=/srv/gitlab/data:/var/opt/gitlab:Z
+
+ShmSize=256m
+Network=gitlab-net
+
+[Service]
+TimeoutStartSec=300
+# Restart=always
+
+[Install]
+WantedBy=multi-user.target
